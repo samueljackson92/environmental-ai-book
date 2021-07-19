@@ -42,6 +42,8 @@
     <script src="../../_static/copybutton.js"></script>
     <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     <script src="../../_static/sphinx-book-theme.12a9622fbb08dcb3a2a40b2c02b83a57.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.0/dist/embed-amd.js"></script>
     <script async="async" src="https://unpkg.com/thebelab@latest/lib/index.js"></script>
     <script >
         const thebe_selector = ".thebe"
@@ -602,15 +604,15 @@
 <h2>Install and load libraries<a class="headerlink" href="#install-and-load-libraries" title="Permalink to this headline">¶</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>pip -q install git+https://github.com/ESM-VFC/intake_zenodo_fetcher.git ##Intake Zenodo Fetcher
-<span class="o">!</span>pip -q install DeepForest
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>!pip -q install git+https://github.com/ESM-VFC/intake_zenodo_fetcher.git ##Intake Zenodo Fetcher
+!pip -q install DeepForest
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">glob</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">glob</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">urllib</span>
 
@@ -622,7 +624,7 @@
 
 <span class="kn">import</span> <span class="nn">tempfile</span>
 
-<span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
 </pre></div>
 </div>
 </div>
@@ -632,7 +634,7 @@
 <h2>Fetch a RGB image from Zenodo<a class="headerlink" href="#fetch-a-rgb-image-from-zenodo" title="Permalink to this headline">¶</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># create a temp dir</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># create a temp dir</span>
 <span class="n">path</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">mkdtemp</span><span class="p">()</span>
 
 <span class="n">catalog_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;catalog.yaml&#39;</span><span class="p">)</span>
@@ -651,17 +653,22 @@
 </pre></div>
 </div>
 </div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cat_tc</span> <span class="o">=</span> <span class="n">intake</span><span class="o">.</span><span class="n">open_catalog</span><span class="p">(</span><span class="s1">&#39;tc.yaml&#39;</span><span class="p">)</span>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Overwriting tc.yaml
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">catalog_entry</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">cat_tc</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cat_tc</span> <span class="o">=</span> <span class="n">intake</span><span class="o">.</span><span class="n">open_catalog</span><span class="p">(</span><span class="s1">&#39;tc.yaml&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">catalog_entry</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">cat_tc</span><span class="p">):</span>
     <span class="n">download_zenodo_files_for_entry</span><span class="p">(</span>
         <span class="n">cat_tc</span><span class="p">[</span><span class="n">catalog_entry</span><span class="p">],</span>
         <span class="n">force_download</span><span class="o">=</span><span class="kc">False</span>
@@ -672,16 +679,14 @@
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tc_rgb</span> <span class="o">=</span> <span class="n">cat_tc</span><span class="p">[</span><span class="s2">&quot;NEONTREE_rgb&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_dask</span><span class="p">()</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">tc_rgb</span> <span class="o">=</span> <span class="n">cat_tc</span><span class="p">[</span><span class="s2">&quot;NEONTREE_rgb&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_dask</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/Users/ac/anaconda3/envs/envsensors/lib/python3.8/site-packages/intake_xarray/image.py:337: FutureWarning: open_files is deprecated and will be removed in a future release. Please use fsspec.core.open_files instead.
   files = open_files(self.urlpath, **self.storage_options)
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/Users/ac/anaconda3/envs/envsensors/lib/python3.8/site-packages/xarray/core/dataset.py:2036: FutureWarning: None value for &#39;chunks&#39; is deprecated. It will raise an error in the future. Use instead &#39;{}&#39;
+/Users/ac/anaconda3/envs/envsensors/lib/python3.8/site-packages/xarray/core/dataset.py:2036: FutureWarning: None value for &#39;chunks&#39; is deprecated. It will raise an error in the future. Use instead &#39;{}&#39;
   warnings.warn(
 </pre></div>
 </div>
@@ -689,7 +694,7 @@
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tc_rgb</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">tc_rgb</span>
 </pre></div>
 </div>
 </div>
@@ -1050,7 +1055,7 @@ dask.array&lt;xarray-&lt;this-array&gt;, shape=(1864, 1429, 3), dtype=uint8, chu
 Coordinates:
   * y        (y) int64 0 1 2 3 4 5 6 7 ... 1857 1858 1859 1860 1861 1862 1863
   * x        (x) int64 0 1 2 3 4 5 6 7 ... 1422 1423 1424 1425 1426 1427 1428
-  * channel  (channel) int64 0 1 2</pre><div class='xr-wrap' hidden><div class='xr-header'><div class='xr-obj-type'>xarray.DataArray</div><div class='xr-array-name'></div><ul class='xr-dim-list'><li><span class='xr-has-index'>y</span>: 1864</li><li><span class='xr-has-index'>x</span>: 1429</li><li><span class='xr-has-index'>channel</span>: 3</li></ul></div><ul class='xr-sections'><li class='xr-section-item'><div class='xr-array-wrap'><input id='section-cee55820-644d-4565-88da-20ea58466c41' class='xr-array-in' type='checkbox' checked><label for='section-cee55820-644d-4565-88da-20ea58466c41' title='Show/hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-array-preview xr-preview'><span>dask.array&lt;chunksize=(1864, 1429, 3), meta=np.ndarray&gt;</span></div><div class='xr-array-data'><table>
+  * channel  (channel) int64 0 1 2</pre><div class='xr-wrap' hidden><div class='xr-header'><div class='xr-obj-type'>xarray.DataArray</div><div class='xr-array-name'></div><ul class='xr-dim-list'><li><span class='xr-has-index'>y</span>: 1864</li><li><span class='xr-has-index'>x</span>: 1429</li><li><span class='xr-has-index'>channel</span>: 3</li></ul></div><ul class='xr-sections'><li class='xr-section-item'><div class='xr-array-wrap'><input id='section-84a711cd-be4d-41ed-b7ce-2a60a9627c84' class='xr-array-in' type='checkbox' checked><label for='section-84a711cd-be4d-41ed-b7ce-2a60a9627c84' title='Show/hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-array-preview xr-preview'><span>dask.array&lt;chunksize=(1864, 1429, 3), meta=np.ndarray&gt;</span></div><div class='xr-array-data'><table>
 <tr>
 <td>
 <table>
@@ -1108,14 +1113,14 @@ Coordinates:
 </svg>
 </td>
 </tr>
-</table></div></div></li><li class='xr-section-item'><input id='section-47b02679-87c0-477b-b211-f2b393e05c04' class='xr-section-summary-in' type='checkbox'  checked><label for='section-47b02679-87c0-477b-b211-f2b393e05c04' class='xr-section-summary' >Coordinates: <span>(3)</span></label><div class='xr-section-inline-details'></div><div class='xr-section-details'><ul class='xr-var-list'><li class='xr-var-item'><div class='xr-var-name'><span class='xr-has-index'>y</span></div><div class='xr-var-dims'>(y)</div><div class='xr-var-dtype'>int64</div><div class='xr-var-preview xr-preview'>0 1 2 3 4 ... 1860 1861 1862 1863</div><input id='attrs-12160962-e32b-4889-a54e-eca207b5199d' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-12160962-e32b-4889-a54e-eca207b5199d' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-69caed5d-f7c0-4b77-9efc-6c0ee1e84640' class='xr-var-data-in' type='checkbox'><label for='data-69caed5d-f7c0-4b77-9efc-6c0ee1e84640' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([   0,    1,    2, ..., 1861, 1862, 1863])</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span class='xr-has-index'>x</span></div><div class='xr-var-dims'>(x)</div><div class='xr-var-dtype'>int64</div><div class='xr-var-preview xr-preview'>0 1 2 3 4 ... 1425 1426 1427 1428</div><input id='attrs-8a63f0e4-7f0a-472a-97ad-dc4bef3ea59c' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-8a63f0e4-7f0a-472a-97ad-dc4bef3ea59c' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-d0d26b15-e71e-4160-bf85-043edb2dd769' class='xr-var-data-in' type='checkbox'><label for='data-d0d26b15-e71e-4160-bf85-043edb2dd769' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([   0,    1,    2, ..., 1426, 1427, 1428])</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span class='xr-has-index'>channel</span></div><div class='xr-var-dims'>(channel)</div><div class='xr-var-dtype'>int64</div><div class='xr-var-preview xr-preview'>0 1 2</div><input id='attrs-87720089-e689-475f-afb3-c7747820577c' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-87720089-e689-475f-afb3-c7747820577c' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-dbd08b76-845a-4b0e-a512-57f26ebc5473' class='xr-var-data-in' type='checkbox'><label for='data-dbd08b76-845a-4b0e-a512-57f26ebc5473' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([0, 1, 2])</pre></div></li></ul></div></li><li class='xr-section-item'><input id='section-e71e571f-3f44-42c7-9984-b4dc342e9eed' class='xr-section-summary-in' type='checkbox' disabled ><label for='section-e71e571f-3f44-42c7-9984-b4dc342e9eed' class='xr-section-summary'  title='Expand/collapse section'>Attributes: <span>(0)</span></label><div class='xr-section-inline-details'></div><div class='xr-section-details'><dl class='xr-attrs'></dl></div></li></ul></div></div></div></div>
+</table></div></div></li><li class='xr-section-item'><input id='section-0976c46b-a923-4f22-b994-5b969cdde2be' class='xr-section-summary-in' type='checkbox'  checked><label for='section-0976c46b-a923-4f22-b994-5b969cdde2be' class='xr-section-summary' >Coordinates: <span>(3)</span></label><div class='xr-section-inline-details'></div><div class='xr-section-details'><ul class='xr-var-list'><li class='xr-var-item'><div class='xr-var-name'><span class='xr-has-index'>y</span></div><div class='xr-var-dims'>(y)</div><div class='xr-var-dtype'>int64</div><div class='xr-var-preview xr-preview'>0 1 2 3 4 ... 1860 1861 1862 1863</div><input id='attrs-27ddc17a-0465-413e-99f6-d75111f403a8' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-27ddc17a-0465-413e-99f6-d75111f403a8' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-2a6467f2-580b-494e-9e6f-26fd39419da6' class='xr-var-data-in' type='checkbox'><label for='data-2a6467f2-580b-494e-9e6f-26fd39419da6' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([   0,    1,    2, ..., 1861, 1862, 1863])</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span class='xr-has-index'>x</span></div><div class='xr-var-dims'>(x)</div><div class='xr-var-dtype'>int64</div><div class='xr-var-preview xr-preview'>0 1 2 3 4 ... 1425 1426 1427 1428</div><input id='attrs-0277b716-bf5a-4b22-bd1f-507032d30dd4' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-0277b716-bf5a-4b22-bd1f-507032d30dd4' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-7b2f93e6-8f5e-4327-b21c-b8cde5ce11d0' class='xr-var-data-in' type='checkbox'><label for='data-7b2f93e6-8f5e-4327-b21c-b8cde5ce11d0' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([   0,    1,    2, ..., 1426, 1427, 1428])</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span class='xr-has-index'>channel</span></div><div class='xr-var-dims'>(channel)</div><div class='xr-var-dtype'>int64</div><div class='xr-var-preview xr-preview'>0 1 2</div><input id='attrs-0e2d3c3e-1f37-48d0-83d9-8e75a341d92f' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-0e2d3c3e-1f37-48d0-83d9-8e75a341d92f' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-9415e923-9f8b-49a6-b152-f859d26f946e' class='xr-var-data-in' type='checkbox'><label for='data-9415e923-9f8b-49a6-b152-f859d26f946e' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([0, 1, 2])</pre></div></li></ul></div></li><li class='xr-section-item'><input id='section-e6040226-11f2-47f5-be3e-ab0c32e4c321' class='xr-section-summary-in' type='checkbox' disabled ><label for='section-e6040226-11f2-47f5-be3e-ab0c32e4c321' class='xr-section-summary'  title='Expand/collapse section'>Attributes: <span>(0)</span></label><div class='xr-section-inline-details'></div><div class='xr-section-details'><dl class='xr-attrs'></dl></div></li></ul></div></div></div></div>
 </div>
 </div>
 <div class="section" id="load-and-prepare-labels">
 <h2>Load and prepare labels<a class="headerlink" href="#load-and-prepare-labels" title="Permalink to this headline">¶</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filenames</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;./NEONsample_RGB/*.tif&#39;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">filenames</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;./NEONsample_RGB/*.tif&#39;</span><span class="p">)</span>
 <span class="n">filesn</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">filenames</span><span class="p">]</span>
 </pre></div>
 </div>
@@ -1123,7 +1128,7 @@ Coordinates:
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">##Create ordered dictionary of .xml annotation files</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">##Create ordered dictionary of .xml annotation files</span>
 <span class="k">def</span> <span class="nf">loadxml</span><span class="p">(</span><span class="n">imagename</span><span class="p">):</span>
   <span class="n">imagename</span> <span class="o">=</span> <span class="n">imagename</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.tif&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
   <span class="n">fullurl</span> <span class="o">=</span> <span class="s2">&quot;https://raw.githubusercontent.com/weecology/NeonTreeEvaluation/master/annotations/&quot;</span> <span class="o">+</span> <span class="n">imagename</span> <span class="o">+</span> <span class="s2">&quot;.xml&quot;</span>
@@ -1140,7 +1145,7 @@ Coordinates:
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># function to extract bounding boxes</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># function to extract bounding boxes</span>
 <span class="k">def</span> <span class="nf">extractbb</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
   <span class="n">bb</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="p">[</span><span class="s1">&#39;bndbox&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">allxml</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;annotation&#39;</span><span class="p">][</span><span class="s1">&#39;object&#39;</span><span class="p">]]</span>
   <span class="k">return</span> <span class="n">bb</span>
@@ -1150,18 +1155,13 @@ Coordinates:
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1
-</pre></div>
-</div>
-</div>
 </div>
 </div>
 <div class="section" id="visualise-image-and-labels">
 <h2>Visualise image and labels<a class="headerlink" href="#visualise-image-and-labels" title="Permalink to this headline">¶</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># function to plot images</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># function to plot images</span>
 <span class="k">def</span> <span class="nf">cv2_imshow</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="n">a</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;uint8&#39;</span><span class="p">)</span>
     <span class="c1"># cv2 stores colors as BGR; convert to RGB</span>
@@ -1178,14 +1178,14 @@ Coordinates:
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">image</span> <span class="o">=</span> <span class="n">tc_rgb</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">image</span> <span class="o">=</span> <span class="n">tc_rgb</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># plot predicted bbox</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># plot predicted bbox</span>
 <span class="n">image2</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 <span class="n">target_bbox</span> <span class="o">=</span> <span class="n">bball</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
@@ -1198,49 +1198,29 @@ Coordinates:
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<img alt="../../_images/forest-modelling-treecrown_17_0.png" src="../../_images/forest-modelling-treecrown_17_0.png" />
-</div>
 </div>
 </div>
 <div class="section" id="load-deepforest-pretrained-model">
 <h2>Load <em>DeepForest</em> pretrained model<a class="headerlink" href="#load-deepforest-pretrained-model" title="Permalink to this headline">¶</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">deepforest</span> <span class="kn">import</span> <span class="n">main</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/Users/ac/anaconda3/envs/envsensors/lib/python3.8/site-packages/pytorch_lightning/metrics/__init__.py:43: LightningDeprecationWarning: `pytorch_lightning.metrics.*` module has been renamed to `torchmetrics.*` and split off to its own package (https://github.com/PyTorchLightning/metrics) since v1.3 and will be removed in v1.5
-  rank_zero_deprecation(
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">deepforest</span> <span class="kn">import</span> <span class="n">main</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># load deep forest model</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># load deep forest model</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">main</span><span class="o">.</span><span class="n">deepforest</span><span class="p">()</span>
 <span class="n">model</span><span class="o">.</span><span class="n">use_release</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Reading config file: /Users/ac/anaconda3/envs/envsensors/lib/python3.8/site-packages/deepforest/data/deepforest_config.yml
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Model from DeepForest release https://github.com/weecology/DeepForest/releases/tag/1.0.0 was already downloaded. Loading model from file.
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Loading pre-built model: https://github.com/weecology/DeepForest/releases/tag/1.0.0
-</pre></div>
-</div>
-</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#boxes = model.predict_image(image=image.values)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#boxes = model.predict_image(image=image.values)</span>
 <span class="c1">#print(boxes)</span>
 </pre></div>
 </div>
